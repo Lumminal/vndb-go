@@ -2,7 +2,7 @@ package wrapper
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -16,20 +16,15 @@ type Stats struct {
 	Vn        int `json:"vn"`
 }
 
-func GetStats(client *http.Client, ctx context.Context) (*Stats, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", BaseUrl+"/stats", nil)
+func (c *VNDBClient) GetStats(ctx context.Context) (*Stats, error) {
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/stats", c.BaseUrl), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
 
 	var stats Stats
-	if err := json.NewDecoder(resp.Body).Decode(&stats); err != nil {
+	err = c.sendRequest(req, &stats)
+	if err != nil {
 		return nil, err
 	}
 

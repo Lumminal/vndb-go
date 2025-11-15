@@ -4,20 +4,16 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
-	"time"
 	"vndb-go/wrapper"
 )
 
 func main() {
-	c := http.Client{
-		Timeout: 3 * time.Second,
-	}
+	c := wrapper.NewVndbClient("9bry-bu11z-bqy87-aao3-z8qk8-e8jx5-a6o1")
 
-	stats, err := wrapper.GetStats(&c, context.TODO())
+	stats, err := c.GetUserWithFields("yorhel", context.TODO(), true, true)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("There's %d characters and %d Visual Novels", stats.Chars, stats.Vn)
+	fmt.Printf("User's id is %d", stats.LengthVotes)
 }
