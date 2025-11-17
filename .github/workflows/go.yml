@@ -13,8 +13,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    environment: VNDB_TOKEN
     env:
-      VNDB_TOKEN: ${{ VNDB_TOKEN.VNDB_TOKEN }}
+      VNDB_TOKEN: ${{ secrets.VNDB_TOKEN }}
     steps:
     - uses: actions/checkout@v4
 
