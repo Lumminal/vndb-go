@@ -5,9 +5,16 @@ import (
 	"os"
 	"testing"
 	"vndb-go/wrapper"
+
+	"github.com/joho/godotenv"
 )
 
 func TestUser(t *testing.T) {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Logf("Error loading .env file")
+	}
+
 	client := wrapper.NewVndbClient(os.Getenv(wrapper.VNDBToken))
 
 	const badUser = "NoUserWithThisNameExists"

@@ -6,13 +6,20 @@ import (
 	"os"
 	"testing"
 	"vndb-go/wrapper"
+
+	"github.com/joho/godotenv"
 )
 
 func TestVnQuery(t *testing.T) {
+	err := godotenv.Load("../.env")
+	if err != nil {
+		t.Logf("Error loading .env file")
+	}
+
 	client := wrapper.NewVndbClient(os.Getenv(wrapper.VNDBToken))
 	q := &wrapper.Query{
 		Page:    1,
-		Results: 50,
+		Results: 100,
 		Fields:  "id, image.url",
 	}
 
