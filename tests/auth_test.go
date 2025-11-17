@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"os"
 	"testing"
 	"vndb-go/wrapper"
 )
@@ -10,7 +11,7 @@ func TestAuth(t *testing.T) {
 	client := wrapper.NewVndbClient("")
 
 	ctx := context.Background()
-	auth, err := client.GetAuthInfo(ctx, "9bry-bu11z-bqy87-aao3-z8qk8-e8jx5-a6o1")
+	auth, err := client.GetAuthInfo(ctx, os.Getenv("VNDB_TOKEN"))
 	if err != nil {
 		t.Errorf("Error getting auth info: %v", err)
 	}
