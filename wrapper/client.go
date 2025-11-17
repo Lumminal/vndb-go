@@ -48,7 +48,6 @@ func (c *VNDBClient) sendRequest(req *http.Request, v interface{}) error {
 
 		return fmt.Errorf("unknown error, status code: %d", resp.StatusCode)
 	}
-
 	if err = json.NewDecoder(resp.Body).Decode(v); err != nil {
 		return err
 	}

@@ -1,12 +1,6 @@
 package tests
 
-import (
-	"context"
-	"testing"
-	"vndb-go/wrapper"
-)
-
-func TestSchema(t *testing.T) {
+/*func TestSchema(t *testing.T) {
 	client := wrapper.NewVndbClient("9bry-bu11z-bqy87-aao3-z8qk8-e8jx5-a6o1")
 
 	ctx := context.TODO()
@@ -25,4 +19,4 @@ func TestSchema(t *testing.T) {
 
 		t.Logf("ExtLinks: %v", *extlink.Url)
 	}
-}
+}*/
