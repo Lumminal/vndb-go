@@ -13,6 +13,8 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    env:
+      VNDB_TOKEN: ${{ secrets.VNDB_TOKEN }}
     steps:
     - uses: actions/checkout@v4
 
@@ -20,8 +22,6 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.24'
-      env:
-        VNDB_TOKEN: ${{ secrets.VNDB_TOKEN }}
 
     - name: Test
       run: go test -v ./tests/
