@@ -29,7 +29,21 @@ type VNResponse struct {
 	NormalizedFilters []interface{}   `json:"normalized_filters"`
 }
 
-// TODO: FILTER FLAGS
+// Query
+//
+// Sends a POST request to the api and fetches the results.
+//   - `ctx` : Context to use.
+//   - `endpoint` : API endpoint (e.g. "character", "vn", "producer")
+//   - `q` : The query (e.g.
+//     query := Query{
+//     Page: 1,
+//     Results: 20,
+//     Fields: "id"
+//     }
+//     will fetch 20 ids starting from page 1.)
+//
+// It returns a VNResponse which you can use to json.Unmarshal the results into your specified array of structs (e.g. into "var vns []Vn")
+// After that, you can act on the results however you like.
 func (c *VNDBClient) Query(ctx context.Context, endpoint string, q *Query) (*VNResponse, error) {
 	url := fmt.Sprintf("%s/%s", c.BaseUrl, endpoint)
 
@@ -45,7 +59,7 @@ func (c *VNDBClient) Query(ctx context.Context, endpoint string, q *Query) (*VNR
 
 	var result VNResponse
 
-	err = c.sendRequest(req, &result)
+	err = c.SendRequest(req, &result)
 	if err != nil {
 		return nil, err
 	}

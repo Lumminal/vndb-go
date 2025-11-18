@@ -23,7 +23,7 @@ func (c *VNDBClient) GetStats(ctx context.Context) (*Stats, error) {
 	}
 
 	var stats Stats
-	err = c.sendRequest(req, &stats)
+	err = c.SendRequest(req, &stats)
 	if err != nil {
 		return nil, err
 	}

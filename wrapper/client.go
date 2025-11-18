@@ -8,17 +8,29 @@ import (
 	"time"
 )
 
+// VNDBClient
+//
+// Includes a client that makes use of VNDB's api via several functions
+// For more info, check: https://api.vndb.org/kana
 type VNDBClient struct {
 	BaseUrl    string
 	token      string
 	HttpClient *http.Client
 }
 
+// errorResponse
+//
+// Code is the status code, while Message is the error message.
+// Used when an error happens during sendRequest, with a bad status code.
 type errorResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
+// NewVndbClient
+//
+// Returns a VNDBClient for use in operations
+// You can pass an empty token if you don't have one
 func NewVndbClient(token string) *VNDBClient {
 	return &VNDBClient{
 		BaseUrl: BaseUrl,
@@ -29,7 +41,12 @@ func NewVndbClient(token string) *VNDBClient {
 	}
 }
 
-func (c *VNDBClient) sendRequest(req *http.Request, v interface{}) error {
+// SendRequest
+//
+// Sends a request towards VNDB api and allows us to fetch the stats.
+//   - `req` : The request to handle (e.g. from http.NewRequest() or http.NewRequestWithContext() )
+//   - `v` : The interface to decode the info into (e.g. if you pass a reference of a Stats struct, Stats will now hold info taken from the API)
+func (c *VNDBClient) SendRequest(req *http.Request, v interface{}) error {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Token %s", c.token))
 	req.Header.Set("Accept", "application/json")
@@ -55,7 +72,10 @@ func (c *VNDBClient) sendRequest(req *http.Request, v interface{}) error {
 	return nil
 }
 
-func (c *VNDBClient) sendRequestWithToken(req *http.Request, v interface{}, token string) error {
+// SendRequestWithToken
+//
+// Same as sendRequest, except you specify the token you want to use
+func (c *VNDBClient) SendRequestWithToken(req *http.Request, v interface{}, token string) error {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Token %s", token))
 	req.Header.Set("Accept", "application/json")

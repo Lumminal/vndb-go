@@ -41,9 +41,7 @@ func (c *VNDBClient) GetUser(username string, ctx context.Context) (*User, error
 
 // GetUserWithFields
 //
-// # Gets the user with specified fields
-//
-// Parameters:
+// Gets the user with specified fields
 //   - `lv` : If true gets lengthvotes
 //   - `lvsum` : If true gets lengthvotes_sum
 func (c *VNDBClient) GetUserWithFields(username string, ctx context.Context, lv, lvsum bool) (*User, error) {
@@ -83,7 +81,7 @@ func GrabUser(url, username string, ctx context.Context, c *VNDBClient) (*User, 
 	var usr UserResponse
 	usr.Results = make(map[string]*User)
 
-	err = c.sendRequest(req, &usr.Results)
+	err = c.SendRequest(req, &usr.Results)
 	if err != nil {
 		return nil, err
 	}

@@ -2,13 +2,11 @@ package tests
 
 import (
 	"context"
-	"os"
 	"testing"
-	"vndb-go/wrapper"
 )
 
 func TestUser(t *testing.T) {
-	client := wrapper.NewVndbClient(os.Getenv(wrapper.VNDBToken))
+	client := clientTest
 
 	const badUser = "NoUserWithThisNameExists"
 	const goodUser = "yorhel"

@@ -1,14 +1,6 @@
 package wrapper
 
-import (
-	"context"
-	"net/http"
-)
-
-type Schema struct {
-	ApiFields SchemaApiFields `json:"api_fields"`
-	ExtLinks  ExtLinkSchema   `json:"extlinks"`
-}
+// This file is a star-wars intro
 
 type SchemaApiFields struct {
 	Character Character `json:"/character"`
@@ -38,12 +30,12 @@ type Character struct {
 }
 
 type CharImage struct {
-	Dims      [][2]*int `json:"dims"`
-	Id        *string   `json:"id"`
-	Sexual    *uint8    `json:"sexual"` // 0 - 2
-	Url       *string   `json:"url"`
-	Violence  *uint8    `json:"violence"` // 0 - 2
-	VoteCount *int      `json:"votecount"`
+	Dims      *[2]int `json:"dims"`
+	Id        *string `json:"id"`
+	Sexual    *uint8  `json:"sexual"` // 0 - 2
+	Url       *string `json:"url"`
+	Violence  *uint8  `json:"violence"` // 0 - 2
+	VoteCount *int    `json:"votecount"`
 }
 
 type Trait struct {
@@ -83,14 +75,14 @@ type Release struct {
 }
 
 type Vn struct {
-	Id        *string   `json:"id"`
-	Title     *string   `json:"title"`
-	AltTitle  *string   `json:"alttitle"`
-	Titles    *[]Title  `json:"titles"`
-	Aliases   *[]string `json:"aliases"`
-	Olang     *string   `json:"olang"`
-	DevStatus *int      `json:"dev_status"` // 0 - 2
-	// Released      *int          `json:"released"`   todo: release date
+	Id            *string       `json:"id"`
+	Title         *string       `json:"title"`
+	AltTitle      *string       `json:"alttitle"`
+	Titles        *[]Title      `json:"titles"`
+	Aliases       *[]string     `json:"aliases"`
+	Olang         *string       `json:"olang"`
+	DevStatus     *int          `json:"dev_status"` // 0 - 2
+	Released      *ReleaseDate  `json:"released"`
 	Languages     *[]string     `json:"languages"`
 	Platforms     *[]string     `json:"platforms"`
 	Image         *Image        `json:"image"`
@@ -120,14 +112,14 @@ type Title struct {
 }
 
 type Image struct {
-	Id            *string   `json:"id"`
-	Url           *string   `json:"url"`
-	Dims          *[][2]int `json:"dims"`
-	Sexual        *int      `json:"sexual"`
-	Violence      *int      `json:"violence"`
-	VoteCount     *int      `json:"votecount"`
-	Thumbnail     *string   `json:"thumbnail"`
-	ThumbnailDims *[][2]int `json:"thumbnail_dims"`
+	Id            *string `json:"id"`
+	Url           *string `json:"url"`
+	Dims          *[2]int `json:"dims"`
+	Sexual        *int    `json:"sexual"`
+	Violence      *int    `json:"violence"`
+	VoteCount     *int    `json:"votecount"`
+	Thumbnail     *string `json:"thumbnail"`
+	ThumbnailDims *[2]int `json:"thumbnail_dims"`
 }
 
 type Screenshot struct {
@@ -237,22 +229,4 @@ type Common struct {
 
 type ExtLinkSchema struct {
 	Producer []*ExtLink `json:"/producer"`
-}
-
-// GetSchema
-//
-// Gets the Schema
-func (c *VNDBClient) GetSchema(ctx context.Context) (*Schema, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", BaseUrl+"/schema", nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var schema Schema
-	err = c.sendRequest(req, &schema)
-	if err != nil {
-		return nil, err
-	}
-
-	return &schema, nil
 }

@@ -25,7 +25,7 @@ func (c *VNDBClient) GetAuthInfo(ctx context.Context, token string) (*AuthInfo, 
 	req.Header.Set("Authorization", fmt.Sprintf("Token %s", c.token))
 
 	var authInfo AuthInfo
-	err = c.sendRequestWithToken(req, &authInfo, token)
+	err = c.SendRequestWithToken(req, &authInfo, token)
 	if err != nil {
 		return nil, err
 	}
