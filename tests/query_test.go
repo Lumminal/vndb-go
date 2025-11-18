@@ -17,7 +17,7 @@ func TestVnQuery(t *testing.T) {
 	q := &wrapper.Query{
 		Page:    1,
 		Results: 10,
-		Fields:  "id, image.url, released",
+		Fields:  "id, image.url, released, staff.id",
 		Reverse: true,
 	}
 
@@ -40,6 +40,12 @@ func TestVnQuery(t *testing.T) {
 		if vn.Released != nil {
 			t.Logf("ID: %s Released: %s", *vn.Id, vn.Released.Release)
 		}
+
+		for _, staff := range *vn.Staff {
+			if staff.Id != nil {
+				t.Logf("Staff: %s", *staff.Id)
+			}
+		}
 	}
 }
 
@@ -52,8 +58,8 @@ func TestCharQuery(t *testing.T) {
 	client := clientTest
 	q := &wrapper.Query{
 		Page:    1,
-		Results: 10,
-		Fields:  "id, description, image.dims",
+		Results: 20,
+		Fields:  "id, description, image.dims, birthday",
 	}
 
 	ctx := context.TODO()
@@ -76,6 +82,10 @@ func TestCharQuery(t *testing.T) {
 
 		if char.Image != nil {
 			t.Logf("ID: %s Image: %d", *char.Id, char.Image.Dims)
+		}
+
+		if char.Birthday != nil {
+			t.Logf("Bday: %d", *char.Birthday)
 		}
 	}
 }
@@ -107,6 +117,41 @@ func TestProducerQuery(t *testing.T) {
 	for _, prod := range prods {
 		if prod.Name != nil {
 			t.Logf("Name: %s", *prod.Name)
+		}
+	}
+}
+
+func TestReleaseQuery(t *testing.T) {
+	if clientTest == nil {
+		t.Logf("No client found")
+		return
+	}
+
+	client := clientTest
+	q := &wrapper.Query{
+		Page:    1,
+		Results: 50,
+		Fields:  "id,producers.id",
+	}
+
+	ctx := context.TODO()
+	results, err := client.Query(ctx, "release", q)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var releases []wrapper.Release
+	if err := json.Unmarshal(results.Results, &releases); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, rl := range releases {
+		if rl.Producers != nil {
+			for _, prod := range *rl.Producers {
+				if prod.Id != nil {
+					t.Logf("Producer: %s", *prod.Id)
+				}
+			}
 		}
 	}
 }

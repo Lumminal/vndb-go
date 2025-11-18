@@ -1,5 +1,14 @@
 package wrapper
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+const (
+	nonStandard = "non-standard"
+)
+
 // This file is a star-wars intro
 
 type SchemaApiFields struct {
@@ -12,8 +21,8 @@ type SchemaApiFields struct {
 
 type Character struct {
 	Age         *int         `json:"age"`
-	Aliases     []*string    `json:"aliases"`
-	Birthday    [][2]*int    `json:"birthday"` // todo: is there something better?
+	Aliases     *[]string    `json:"aliases"`
+	Birthday    *[2]int      `json:"birthday"` // todo: is there something better?
 	BloodType   *string      `json:"blood_type"`
 	Bust        *int         `json:"bust"`
 	Cup         *string      `json:"cup"`
@@ -63,15 +72,27 @@ type Producer struct {
 }
 
 type Release struct {
-	Id        *string            `json:"id"`
-	Title     *string            `json:"title"`
-	AltTitle  *string            `json:"alltitle"`
-	Languages *[]Language        `json:"languages"`
-	Platforms *[]string          `json:"platforms"`
-	Media     *[]Media           `json:"media"`
-	Vns       *[]string          `json:"vns"`
-	Producers *[]ReleaseProducer `json:"producers"`
-	// todo: finish
+	Id         *string            `json:"id"`
+	Title      *string            `json:"title"`
+	AltTitle   *string            `json:"alltitle"`
+	Languages  *[]Language        `json:"languages"`
+	Platforms  *[]string          `json:"platforms"`
+	Media      *[]Media           `json:"media"`
+	Vns        *[]string          `json:"vns"`
+	Producers  *[]ReleaseProducer `json:"producers"`
+	Images     *[]ReleaseImage    `json:"images"`
+	Released   *ReleaseDate       `json:"released"`
+	Minage     *int               `json:"minage"`
+	Patch      bool               `json:"patch"`
+	Freeware   bool               `json:"freeware"`
+	Uncensored *bool              `json:"uncensored"`
+	Resolution *Resolution        `json:"resolution"`
+	Engine     *string            `json:"engine"`
+	Voiced     *int               `json:"voiced"` // 1 = not voiced, 2 = only ero scenes voiced, 3 = partially voiced, 4 = fully voiced.
+	Notes      *string            `json:"notes"`
+	Gtin       *string            `json:"gtin"`
+	Catalog    *string            `json:"catalog"`
+	Extlinks   *[]ExtLink         `json:"extlinks"`
 }
 
 type Vn struct {
@@ -122,6 +143,14 @@ type Image struct {
 	ThumbnailDims *[2]int `json:"thumbnail_dims"`
 }
 
+type ReleaseImage struct {
+	*Image
+	Type      *string     `json:"type"`
+	Vn        *string     `json:"vn"`
+	Languages *[]Language `json:"languages"`
+	Photo     *bool       `json:"photo"`
+}
+
 type Screenshot struct {
 	*Image
 	Release *Release `json:"release"`
@@ -169,7 +198,7 @@ type Media struct {
 }
 
 type ReleaseProducer struct {
-	Inherit   *string `json:"_inherit"`
+	*Producer
 	Developer *string `json:"developer"`
 	Publisher *string `json:"publisher"`
 }
@@ -229,4 +258,54 @@ type Common struct {
 
 type ExtLinkSchema struct {
 	Producer []*ExtLink `json:"/producer"`
+}
+
+type Quote struct {
+	Id        *string    `json:"id"`
+	Quote     *string    `json:"quote"`
+	Score     *int       `json:"score"`
+	Vn        *Vn        `json:"vn"`
+	Character *Character `json:"character"`
+}
+
+type Resolution struct {
+	Type *string
+	Res  *[2]int
+}
+
+func (rs *Resolution) UnmarshalJSON(data []byte) error {
+	var i interface{}
+	if err := json.Unmarshal(data, &i); err != nil {
+		return err
+	}
+
+	// if its string, its non-standard
+	str, ok := i.(string)
+	if ok && str == nonStandard {
+		nonStand := nonStandard
+
+		rs.Type = &nonStand
+		rs.Res = nil
+		return nil
+	}
+
+	// if its array, it contains 2 ints (width, height)
+	arr, ok := i.([]interface{})
+	if ok {
+		if len(arr) == 2 {
+			width, okw := arr[0].(float64)
+			height, okh := arr[1].(float64)
+
+			if !okw || !okh {
+				return fmt.Errorf("invalid resolution: %s", i)
+			}
+
+			rs.Type = nil
+			resArray := [2]int{int(width), int(height)}
+			rs.Res = &resArray
+			return nil
+		}
+	}
+
+	return fmt.Errorf("invalid resolution: %s", i)
 }
