@@ -3,6 +3,7 @@ package tests
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"testing"
 	"vndb-go/wrapper"
 )
@@ -14,37 +15,23 @@ func TestVnQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	q := &wrapper.Query{
-		Page:    1,
-		Results: 10,
-		Fields:  "id, image.url, released, staff.id",
-		Reverse: true,
-	}
-
-	ctx := context.TODO()
-	results, err := client.Query(ctx, "vn", q)
-	if err != nil {
-		t.Fatal(err)
-	}
 
 	var vns []wrapper.Vn
-	if err := json.Unmarshal(results.Results, &vns); err != nil {
-		t.Fatal(err)
+	vnQuery := wrapper.VisualNovelQuery(client)
+	vnQuery.Fields("id")
+	vnQuery.Results(10)
+
+	vnQuery.Filters(
+		wrapper.DevStatus.Equal("0"))
+
+	vns, err := vnQuery.Get(context.TODO())
+	if err != nil {
+		t.Errorf("%s", err)
 	}
 
 	for _, vn := range vns {
-		if vn.Image != nil {
-			t.Logf("ID: %s Image: %s", *vn.Id, *vn.Image.Url)
-		}
-
-		if vn.Released != nil {
-			t.Logf("ID: %s Released: %s", *vn.Id, vn.Released.Release)
-		}
-
-		for _, staff := range *vn.Staff {
-			if staff.Id != nil {
-				t.Logf("Staff: %s", *staff.Id)
-			}
+		if vn.Id != nil {
+			t.Logf("Found %s", *vn.Id)
 		}
 	}
 }
@@ -56,21 +43,17 @@ func TestCharQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	q := &wrapper.Query{
-		Page:    1,
-		Results: 20,
-		Fields:  "id, description, image.dims, birthday",
-	}
+	charQuery := wrapper.CharacterQuery(client)
+	charQuery.Fields("id, description")
+	charQuery.Results(10)
+	charQuery.Page(1)
 
-	ctx := context.TODO()
-	results, err := client.Query(ctx, "character", q)
-	if err != nil {
-		t.Fatal(err)
-	}
+	log.Printf("Filters: %s", charQuery.BaseQuery.Query.Filters)
 
 	var chars []wrapper.Character
-	if err := json.Unmarshal(results.Results, &chars); err != nil {
-		t.Fatal(err)
+	chars, err := charQuery.Get(context.TODO())
+	if err != nil {
+		t.Errorf("%s", err)
 	}
 
 	for _, char := range chars {

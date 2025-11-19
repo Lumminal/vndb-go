@@ -1,6 +1,8 @@
 package wrapper
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -100,4 +102,38 @@ func (c *VNDBClient) SendRequestWithToken(req *http.Request, v interface{}, toke
 	}
 
 	return nil
+}
+
+func (c *VNDBClient) Get(ctx context.Context, endpoint string, out interface{}) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/%s", c.BaseUrl, endpoint), nil)
+	if err != nil {
+		return err
+	}
+
+	err = c.SendRequest(req, &out)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *Query) (*VNResponse, error) {
+	body, err := json.Marshal(q)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, fmt.Sprintf("%s/%s", c.BaseUrl, endpoint), bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+
+	var result VNResponse
+	err = c.SendRequest(req, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }

@@ -3,7 +3,6 @@ package wrapper
 import (
 	"context"
 	"fmt"
-	"net/http"
 )
 
 type BaseUser struct {
@@ -29,7 +28,7 @@ type UserFields struct {
 //
 // Gets the user without any fields specified
 func (c *VNDBClient) GetUser(username string, ctx context.Context) (*User, error) {
-	var url = fmt.Sprintf("%s/user?q=%s", c.BaseUrl, username)
+	var url = fmt.Sprintf("user?q=%s", username)
 
 	usr, err := GrabUser(url, username, ctx, c)
 	if err != nil {
@@ -45,7 +44,7 @@ func (c *VNDBClient) GetUser(username string, ctx context.Context) (*User, error
 //   - `lv` : If true gets lengthvotes
 //   - `lvsum` : If true gets lengthvotes_sum
 func (c *VNDBClient) GetUserWithFields(username string, ctx context.Context, lv, lvsum bool) (*User, error) {
-	var url = fmt.Sprintf("%s/user?q=%s&fields=", c.BaseUrl, username)
+	var url = fmt.Sprintf("user?q=%s&fields=", username)
 
 	switch lv {
 	case true:
@@ -73,15 +72,10 @@ func (c *VNDBClient) GetUserWithFields(username string, ctx context.Context, lv,
 //
 // Helper function to grab the user data
 func GrabUser(url, username string, ctx context.Context, c *VNDBClient) (*User, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var usr UserResponse
 	usr.Results = make(map[string]*User)
 
-	err = c.SendRequest(req, &usr.Results)
+	err := c.Get(ctx, url, &usr.Results)
 	if err != nil {
 		return nil, err
 	}

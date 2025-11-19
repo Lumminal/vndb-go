@@ -23,6 +23,8 @@ func TestUser(t *testing.T) {
 		t.Fatal("expecting non-nil user but got nill user")
 	}
 
+	t.Logf("Username: %s", usr2.Username)
+
 	if usr2.UserFields.LengthVotes != 0 || usr2.UserFields.LengthVotesSum != 0 {
 		t.Fatalf("expecting 0 votes but got %d and sum %d", usr2.UserFields.LengthVotes, usr2.UserFields.LengthVotesSum)
 	}

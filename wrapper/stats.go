@@ -2,8 +2,6 @@ package wrapper
 
 import (
 	"context"
-	"fmt"
-	"net/http"
 )
 
 type Stats struct {
@@ -17,13 +15,8 @@ type Stats struct {
 }
 
 func (c *VNDBClient) GetStats(ctx context.Context) (*Stats, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/stats", c.BaseUrl), nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var stats Stats
-	err = c.SendRequest(req, &stats)
+	err := c.Get(ctx, "stats", &stats)
 	if err != nil {
 		return nil, err
 	}
