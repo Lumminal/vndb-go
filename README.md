@@ -1,11 +1,16 @@
 # vndb-go
 
-vndb-go is an api wrapper built with Golang as a learning project,
-therefore it may be unstable for actual use.
+vndb-go is an api wrapper for [VNDB API](https://api.vndb.org/kana).
+Zero dependencies are required to run this package.
 
-Zero-dependencies are required to run this library.
+Check out the examples to see how it works.
 
-Look at the examples below to see how it works.
+### Status 
+
+This project was made as part of learning backend development and golang,
+therefore **it's experimental and unstable for actual use**.
+
+Some features like UList PATCH/DELETE have not been implemented.
 
 # Installation
 
@@ -14,7 +19,7 @@ Run
 
 # Examples
 
-### Creating a client and grabbing the site's stats
+### Creating a client and grabbing general VNDB stats
 
 ```go
 package main
@@ -28,7 +33,10 @@ import (
 
 func main() {
 	client := vndb_go.NewVndbClient(YOUR_TOKEN) // you can also pass an empty string
-
+	
+    // note: you can also set an environment variable "VNDB_TOKEN" and access it like this:
+	// client := vndb_go.NewVndbClient(os.Getenv(vndb_go.VNDBToken))
+	
 	ctx := context.TODO()
 	stats, err := client.GetStats(ctx)
 	if err != nil {
@@ -66,7 +74,7 @@ func main() {
 	// vnQuery.Filters(vndb_go.DevStatus.Equal("0"))
 	// which will give you only results that are
 	// DevStatus is equal to 0 (devstatus = 0)
-	// There's many filters you can choose from
+	// There's many filters you can choose from.
     
     vns, err := vnQuery.Get(context.TODO()) // get the query results
     if err != nil {
@@ -107,4 +115,4 @@ to fix it.
 
 # License
 
-GPL-3.0
+The code is licensed under GPL-3.0
