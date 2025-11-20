@@ -1,4 +1,4 @@
-package wrapper
+package vndb_go
 
 import (
 	"bytes"
@@ -119,6 +119,26 @@ func (c *VNDBClient) Get(ctx context.Context, endpoint string, out interface{}) 
 }
 
 func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *Query) (*VNResponse, error) {
+	body, err := json.Marshal(q)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, fmt.Sprintf("%s/%s", c.BaseUrl, endpoint), bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+
+	var result VNResponse
+	err = c.SendRequest(req, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *UlistQueryRequest) (*VNResponse, error) {
 	body, err := json.Marshal(q)
 	if err != nil {
 		return nil, err

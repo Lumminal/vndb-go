@@ -1,4 +1,4 @@
-package wrapper
+package vndb_go
 
 type FilterField string
 type IntFilterField int

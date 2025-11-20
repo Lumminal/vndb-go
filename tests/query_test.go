@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"testing"
-	"vndb-go/wrapper"
+	"vndb-go/vndb-go"
 )
 
 func TestVnQuery(t *testing.T) {
@@ -16,13 +16,13 @@ func TestVnQuery(t *testing.T) {
 
 	client := clientTest
 
-	var vns []wrapper.Vn
-	vnQuery := wrapper.VisualNovelQuery(client)
+	var vns []vndb_go.Vn
+	vnQuery := vndb_go.VisualNovelQuery(client)
 	vnQuery.Fields("id")
 	vnQuery.Results(10)
 
 	vnQuery.Filters(
-		wrapper.DevStatus.Equal("0"))
+		vndb_go.DevStatus.Equal("0"))
 
 	vns, err := vnQuery.Get(context.TODO())
 	if err != nil {
@@ -43,14 +43,14 @@ func TestCharQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	charQuery := wrapper.CharacterQuery(client)
+	charQuery := vndb_go.CharacterQuery(client)
 	charQuery.Fields("id, description")
 	charQuery.Results(10)
 	charQuery.Page(1)
 
 	log.Printf("Filters: %s", charQuery.BaseQuery.Query.Filters)
 
-	var chars []wrapper.Character
+	var chars []vndb_go.Character
 	chars, err := charQuery.Get(context.TODO())
 	if err != nil {
 		t.Errorf("%s", err)
@@ -80,7 +80,7 @@ func TestProducerQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	q := &wrapper.Query{
+	q := &vndb_go.Query{
 		Page:    3,
 		Results: 10,
 		Fields:  "name",
@@ -92,7 +92,7 @@ func TestProducerQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var prods []wrapper.Producer
+	var prods []vndb_go.Producer
 	if err := json.Unmarshal(results.Results, &prods); err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func TestReleaseQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	q := &wrapper.Query{
+	q := &vndb_go.Query{
 		Page:    1,
 		Results: 50,
 		Fields:  "id,producers.id",
@@ -123,7 +123,7 @@ func TestReleaseQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var releases []wrapper.Release
+	var releases []vndb_go.Release
 	if err := json.Unmarshal(results.Results, &releases); err != nil {
 		t.Fatal(err)
 	}

@@ -1,4 +1,4 @@
-package wrapper
+package vndb_go
 
 import (
 	"context"
@@ -20,6 +20,12 @@ const (
 	VnCountSort    string = "vn_count"
 	CharCountSort  string = "char_count"
 	ScoreSort      string = "score"
+	VotedSort      string = "voted"
+	VoteSort       string = "vote"
+	AddedSort      string = "added"
+	LastModSort    string = "lastmod"
+	StartedSort    string = "started"
+	FinishedSort   string = "finished"
 )
 
 var (
@@ -31,6 +37,7 @@ var (
 	allowedTagSort       = []string{IDSort, NameSort, VnCountSort, SearchRankSort}
 	allowedTraitSort     = []string{IDSort, NameSort, CharCountSort, SearchRankSort}
 	allowedQuoteSort     = []string{IDSort, ScoreSort}
+	allowedUlistSort     = []string{IDSort, TitleSort, ReleasedSort, RatingSort, VoteCountSort, VotedSort, VoteSort, AddedSort, LastModSort, StartedSort, FinishedSort, SearchRankSort}
 )
 
 // BaseQuery - Start

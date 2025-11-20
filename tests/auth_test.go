@@ -4,11 +4,11 @@ import (
 	"context"
 	"os"
 	"testing"
-	"vndb-go/wrapper"
+	"vndb-go/vndb-go"
 )
 
 func TestAuth(t *testing.T) {
-	client := wrapper.NewVndbClient("")
+	client := vndb_go.NewVndbClient("")
 
 	ctx := context.Background()
 	auth, err := client.GetAuthInfo(ctx, os.Getenv("VNDB_TOKEN"))

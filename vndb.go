@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"vndb-go/wrapper"
+	"vndb-go/vndb-go"
 )
 
 func main() {
-	fmt.Println(os.Getenv(wrapper.VNDBToken))
+	fmt.Println(os.Getenv(vndb_go.VNDBToken))
 }

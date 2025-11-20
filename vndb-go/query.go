@@ -1,4 +1,4 @@
-package wrapper
+package vndb_go
 
 import (
 	"bytes"
@@ -19,6 +19,11 @@ type Query struct {
 	Count             bool   `json:"count,omitempty"`
 	CompactFilters    bool   `json:"compact_filters,omitempty"`
 	NormalizedFilters bool   `json:"normalized_filters,omitempty"`
+}
+
+type UlistQueryRequest struct {
+	Query
+	User string `json:"user,omitempty"`
 }
 
 type VNResponse struct {
