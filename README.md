@@ -10,7 +10,7 @@ Look at the examples below to see how it works.
 # Installation
 
 Run
-```go install https://github.com/Lumminal/vndb-go```
+```go get github.com/Lumminal/vndb-go```
 
 # Examples
 
