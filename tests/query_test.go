@@ -17,7 +17,7 @@ func TestVnQuery(t *testing.T) {
 	client := clientTest
 
 	var vns []vndb_go.Vn
-	vnQuery := vndb_go.VisualNovelQuery(client)
+	vnQuery := vndb_go.NewVnQuery(client)
 	vnQuery.Fields("id")
 	vnQuery.Results(10)
 
@@ -43,7 +43,7 @@ func TestCharQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	charQuery := vndb_go.CharacterQuery(client)
+	charQuery := vndb_go.NewCharacterQuery(client)
 	charQuery.Fields("id, description")
 	charQuery.Results(10)
 	charQuery.Page(1)

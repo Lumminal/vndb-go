@@ -94,7 +94,7 @@ type VNQuery struct {
 	BaseQuery
 }
 
-func VisualNovelQuery(client *VNDBClient) *VNQuery {
+func NewVnQuery(client *VNDBClient) *VNQuery {
 	return &VNQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedVnSort},
 	}
@@ -126,7 +126,7 @@ type CharQuery struct {
 	BaseQuery
 }
 
-func CharacterQuery(client *VNDBClient) *CharQuery {
+func NewCharacterQuery(client *VNDBClient) *CharQuery {
 	return &CharQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedCharacterSort},
 	}
@@ -158,7 +158,7 @@ type ProducerQuery struct {
 	BaseQuery
 }
 
-func ProdQuery(client *VNDBClient) *ProducerQuery {
+func NewProducerQuery(client *VNDBClient) *ProducerQuery {
 	return &ProducerQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedProducerSort},
 	}
@@ -190,7 +190,7 @@ type ReleaseQuery struct {
 	BaseQuery
 }
 
-func RReleaseQuery(client *VNDBClient) *ReleaseQuery {
+func NewReleaseQuery(client *VNDBClient) *ReleaseQuery {
 	return &ReleaseQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedReleaseSort},
 	}
@@ -222,7 +222,7 @@ type StaffQuery struct {
 	BaseQuery
 }
 
-func SStaffQuery(client *VNDBClient) *StaffQuery {
+func NewStaffQuery(client *VNDBClient) *StaffQuery {
 	return &StaffQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedStaffSort},
 	}
@@ -254,7 +254,7 @@ type TagQuery struct {
 	BaseQuery
 }
 
-func TTagQuery(client *VNDBClient) *TagQuery {
+func NewTagQuery(client *VNDBClient) *TagQuery {
 	return &TagQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedTagSort},
 	}
@@ -285,7 +285,7 @@ type TraitQuery struct {
 	BaseQuery
 }
 
-func TTraitQuery(client *VNDBClient) *TraitQuery {
+func NewTraitQuery(client *VNDBClient) *TraitQuery {
 	return &TraitQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedTraitSort},
 	}
@@ -314,7 +314,7 @@ type QuoteQuery struct {
 	BaseQuery
 }
 
-func QQuoteQuery(client *VNDBClient) *QuoteQuery {
+func NewQuoteQuery(client *VNDBClient) *QuoteQuery {
 	return &QuoteQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedQuoteSort},
 	}

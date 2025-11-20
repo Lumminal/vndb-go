@@ -26,7 +26,7 @@ func TestUlist(t *testing.T) {
 func TestUlistPost(t *testing.T) {
 	client := clientTest
 
-	q := vndb_go.UlistQuery(client)
+	q := vndb_go.NewUlistQuery(client)
 	q.SetUser("u227260")
 	q.Fields("lastmod")
 

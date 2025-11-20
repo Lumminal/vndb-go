@@ -81,7 +81,7 @@ type UListQuery struct {
 	User string `json:"user,omitempty"`
 }
 
-func UlistQuery(client *VNDBClient) *UListQuery {
+func NewUlistQuery(client *VNDBClient) *UListQuery {
 	return &UListQuery{
 		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedUlistSort},
 	}
@@ -91,14 +91,14 @@ func (ul *UListQuery) SetUser(id string) {
 	ul.User = id
 }
 
-func (cq *UListQuery) Get(ctx context.Context) ([]UList, error) {
+func (ul *UListQuery) Get(ctx context.Context) ([]UList, error) {
 
 	ulistquery := &UlistQueryRequest{
-		Query: *cq.Query,
-		User:  cq.User,
+		Query: *ul.Query,
+		User:  ul.User,
 	}
 
-	resp, err := cq.Client.PostUlist(ctx, "ulist", ulistquery)
+	resp, err := ul.Client.PostUlist(ctx, "ulist", ulistquery)
 	if err != nil {
 		return nil, err
 	}
