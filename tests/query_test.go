@@ -2,7 +2,6 @@ package tests
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"testing"
 	"vndb-go/vndb-go"
@@ -80,21 +79,13 @@ func TestProducerQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	q := &vndb_go.Query{
-		Page:    3,
-		Results: 10,
-		Fields:  "name",
-	}
+	q := vndb_go.NewProducerQuery(client)
+	q.Fields("name")
+	q.Results(10)
 
-	ctx := context.TODO()
-	results, err := client.Query(ctx, "producer", q)
+	prods, err := q.Get(context.TODO())
 	if err != nil {
-		t.Fatal(err)
-	}
-
-	var prods []vndb_go.Producer
-	if err := json.Unmarshal(results.Results, &prods); err != nil {
-		t.Fatal(err)
+		t.Errorf("%s", err)
 	}
 
 	for _, prod := range prods {
@@ -111,21 +102,13 @@ func TestReleaseQuery(t *testing.T) {
 	}
 
 	client := clientTest
-	q := &vndb_go.Query{
-		Page:    1,
-		Results: 50,
-		Fields:  "id,producers.id",
-	}
+	q := vndb_go.NewReleaseQuery(client)
+	q.Fields("id", "producers.id")
+	q.Results(10)
 
-	ctx := context.TODO()
-	results, err := client.Query(ctx, "release", q)
+	releases, err := q.Get(context.TODO())
 	if err != nil {
-		t.Fatal(err)
-	}
-
-	var releases []vndb_go.Release
-	if err := json.Unmarshal(results.Results, &releases); err != nil {
-		t.Fatal(err)
+		t.Errorf("%s", err)
 	}
 
 	for _, rl := range releases {

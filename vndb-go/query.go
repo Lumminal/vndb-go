@@ -1,11 +1,7 @@
 package vndb_go
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
-	"fmt"
-	"net/http"
 )
 
 type Query struct {
@@ -32,30 +28,4 @@ type VNResponse struct {
 	Count             int             `json:"count"`
 	CompactFilters    string          `json:"compact_filters"`
 	NormalizedFilters []interface{}   `json:"normalized_filters"`
-}
-
-// Query
-//
-// TODO: Replace
-func (c *VNDBClient) Query(ctx context.Context, endpoint string, q *Query) (*VNResponse, error) {
-	url := fmt.Sprintf("%s/%s", c.BaseUrl, endpoint)
-
-	body, err := json.Marshal(q)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(body))
-	if err != nil {
-		return nil, err
-	}
-
-	var result VNResponse
-
-	err = c.SendRequest(req, &result)
-	if err != nil {
-		return nil, err
-	}
-
-	return &result, nil
 }
