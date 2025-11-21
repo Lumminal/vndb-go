@@ -8,7 +8,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"vndb-go/types"
+
+	"github.com/Lumminal/vndb-go/types"
 )
 
 const (

@@ -4,8 +4,9 @@ import (
 	"context"
 	"os"
 	"testing"
-	"vndb-go"
-	"vndb-go/types"
+
+	"github.com/Lumminal/vndb-go"
+	"github.com/Lumminal/vndb-go/types"
 )
 
 func TestAuth(t *testing.T) {

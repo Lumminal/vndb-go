@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	"log"
 	"strings"
-	"vndb-go/helper"
-	"vndb-go/types"
+
+	"github.com/Lumminal/vndb-go/helper"
+	"github.com/Lumminal/vndb-go/types"
 )
 
 // This file includes all query related functions and structs

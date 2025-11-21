@@ -4,7 +4,8 @@ import (
 	"log"
 	"os"
 	"testing"
-	"vndb-go"
+
+	"github.com/Lumminal/vndb-go"
 )
 
 var clientTest *vndb_go.VNDBClient

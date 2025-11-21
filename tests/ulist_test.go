@@ -5,7 +5,8 @@ import (
 	"log"
 	"testing"
 	"time"
-	"vndb-go"
+
+	"github.com/Lumminal/vndb-go"
 )
 
 func TestUlist(t *testing.T) {

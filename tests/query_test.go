@@ -4,8 +4,9 @@ import (
 	"context"
 	"log"
 	"testing"
-	"vndb-go"
-	"vndb-go/types"
+
+	"github.com/Lumminal/vndb-go"
+	"github.com/Lumminal/vndb-go/types"
 )
 
 func TestVnQuery(t *testing.T) {
