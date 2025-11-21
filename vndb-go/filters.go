@@ -1,8 +1,6 @@
 package vndb_go
 
 type FilterField string
-type IntFilterField int
-
 type Filter []interface{}
 
 // Note: Some filter fields don't accept some operations

@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+// This file includes all query related functions and structs
+
 type AllowedSort []string
 
 const (

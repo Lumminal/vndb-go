@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+const (
+	BaseUrl   = "https://api.vndb.org/kana"
+	VNDBToken = "VNDB_TOKEN"
+)
+
 // VNDBClient
 //
 // Includes a client that makes use of VNDB's api via several functions
@@ -138,6 +143,7 @@ func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *Query) (*VNRe
 	return &result, nil
 }
 
+// Use this instead of Post when working with ulists
 func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *UlistQueryRequest) (*VNResponse, error) {
 	body, err := json.Marshal(q)
 	if err != nil {

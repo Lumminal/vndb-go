@@ -11,18 +11,10 @@ const (
 
 // This file is a star-wars intro
 
-type SchemaApiFields struct {
-	Character Character `json:"/character"`
-	Producer  Producer  `json:"/producer"`
-	Trait     Trait     `json:"/trait"`
-	Vn        Vn        `json:"/vn"`
-	// Release   Release   `json:"/release"`
-}
-
 type Character struct {
 	Age         *int         `json:"age"`
 	Aliases     *[]string    `json:"aliases"`
-	Birthday    *[2]int      `json:"birthday"` // todo: is there something better?
+	Birthday    *[2]int      `json:"birthday"`
 	BloodType   *string      `json:"blood_type"`
 	Bust        *int         `json:"bust"`
 	Cup         *string      `json:"cup"`
