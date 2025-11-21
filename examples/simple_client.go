@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"vndb-go"
+
+	"github.com/Lumminal/vndb-go"
 )
 
 func main() {
