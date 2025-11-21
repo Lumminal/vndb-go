@@ -1,9 +1,7 @@
-# vndb-go
+# Vndb-go
 
 vndb-go is an api wrapper for [VNDB API](https://api.vndb.org/kana).
 Zero dependencies are required to run this package.
-
-Check out the examples to see how it works.
 
 ### Status 
 
@@ -19,28 +17,29 @@ Run
 
 # Examples
 
-Check the examples folder for how to use the library!
+Check the examples folder for how to use the library.
 
 It includes a basic rundown for creating a client and running a query.
 
 # ULists
 
 Ulists have not been implemented fully, but they support POST/GET methods.
-They have their own query and you have to specify the user's id before making
+They have their own query, and you have to specify the user's id before making
 a query by calling:
 
 ```yourUlistQuery.SetUser(USER_ID_HERE)```
 
 # Issues
 
-If you find any problems with the code, please open an issue and I'm gonna try
-to fix it.
+If you find any problems with the code, please open an issue about it.
 
-# [TODO]
+You may also contribute by opening a pull request.
+
+# TODO
 
 [] Add better tests
 
-[] Add patching/delete for ulists
+[] Add PATCH/DELETE for ulists
 
 [] Properly test all features
 
