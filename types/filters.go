@@ -1,4 +1,4 @@
-package vndb_go
+package types
 
 type FilterField string
 type Filter []interface{}

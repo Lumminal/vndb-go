@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"testing"
-	"vndb-go/vndb-go"
+	"vndb-go"
 )
 
 var clientTest *vndb_go.VNDBClient

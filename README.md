@@ -19,78 +19,9 @@ Run
 
 # Examples
 
-### Creating a client and grabbing general VNDB stats
+Check the examples folder for how to use the library!
 
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"log"
-	"vndb-go/vndb-go"
-)
-
-func main() {
-	client := vndb_go.NewVndbClient(YOUR_TOKEN) // you can also pass an empty string
-	
-    // note: you can also set an environment variable "VNDB_TOKEN" and access it like this:
-	// client := vndb_go.NewVndbClient(os.Getenv(vndb_go.VNDBToken))
-	
-	ctx := context.TODO()
-	stats, err := client.GetStats(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("Characters: %d", stats.Chars)
-}
-
-```
- 
-### Running a query on visual novels
-
-```go
-package main
-
-import (
-	"vndb-go/vndb-go"
-	"context"
-	"fmt"
-	"log"
-)
-
-func main() {
-
-	client := vndb_go.NewVndbClient(YOUR_TOKEN)
-	
-    var vns []vndb_go.Vn // we will store the results here
-    vnQuery := vndb_go.NewVnQuery(client) // create a new query
-    vnQuery.Fields("title", "devstatus") // grab only vns with "title" and "devstatus"
-    vnQuery.Results(10) // return only 10 VNs
-    
-    // OPTIONAL: 
-	// You can add filters like:
-	// vnQuery.Filters(vndb_go.DevStatus.Equal("0"))
-	// which will give you only results that are
-	// DevStatus is equal to 0 (devstatus = 0)
-	// There's many filters you can choose from.
-    
-    vns, err := vnQuery.Get(context.TODO()) // get the query results
-    if err != nil {
-		log.Fatal(err)
-    }
-
-    for _, vn := range vns {
-        if vn.Id != nil {
-            log.Printf("Found %s", *vn.Id)
-        }
-		if vn.DevStatus != nil {
-			log.Printf("DevStatus %s", *vn.DevStatus)
-        }
-    }
-} 
-```
+It includes a basic rundown for creating a client and running a query.
 
 # ULists
 

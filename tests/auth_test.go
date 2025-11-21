@@ -4,14 +4,15 @@ import (
 	"context"
 	"os"
 	"testing"
-	"vndb-go/vndb-go"
+	"vndb-go"
+	"vndb-go/types"
 )
 
 func TestAuth(t *testing.T) {
 	client := vndb_go.NewVndbClient("")
 
-	expected := &vndb_go.AuthInfo{
-		BaseUser: vndb_go.BaseUser{
+	expected := &types.AuthInfo{
+		BaseUser: types.BaseUser{
 			Id:       "u227260",
 			Username: "Luminal",
 		},
@@ -24,25 +25,7 @@ func TestAuth(t *testing.T) {
 		t.Errorf("Error getting auth info: %s", err)
 	}
 
-	if !Compare(expected, auth) {
+	if !types.CompareAuthInfo(expected, auth) {
 		t.Errorf("Got %v, but expected %v", auth, expected)
 	}
-}
-
-func Compare(a, b *vndb_go.AuthInfo) bool {
-	if a.Username != b.Username || a.Id != b.Id {
-		return false
-	}
-
-	if len(a.Permissions) != len(b.Permissions) {
-		return false
-	}
-
-	for i := range a.Permissions {
-		if a.Permissions[i] != b.Permissions[i] {
-			return false
-		}
-	}
-
-	return true
 }

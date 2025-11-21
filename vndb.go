@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"vndb-go/types"
 )
 
 const (
@@ -123,7 +124,7 @@ func (c *VNDBClient) Get(ctx context.Context, endpoint string, out interface{}) 
 	return nil
 }
 
-func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *Query) (*VNResponse, error) {
+func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *types.Query) (*types.VNResponse, error) {
 	body, err := json.Marshal(q)
 	if err != nil {
 		return nil, err
@@ -134,7 +135,7 @@ func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *Query) (*VNRe
 		return nil, err
 	}
 
-	var result VNResponse
+	var result types.VNResponse
 	err = c.SendRequest(req, &result)
 	if err != nil {
 		return nil, err
@@ -144,7 +145,7 @@ func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *Query) (*VNRe
 }
 
 // Use this instead of Post when working with ulists
-func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *UlistQueryRequest) (*VNResponse, error) {
+func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *types.UlistQueryRequest) (*types.VNResponse, error) {
 	body, err := json.Marshal(q)
 	if err != nil {
 		return nil, err
@@ -155,11 +156,129 @@ func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *UlistQue
 		return nil, err
 	}
 
-	var result VNResponse
+	var result types.VNResponse
 	err = c.SendRequest(req, &result)
 	if err != nil {
 		return nil, err
 	}
 
 	return &result, nil
+}
+
+// GetUser
+//
+// Gets the user without any fields specified
+func (c *VNDBClient) GetUser(username string, ctx context.Context) (*types.User, error) {
+	var url = fmt.Sprintf("user?q=%s", username)
+
+	usr, err := GrabUser(url, username, ctx, c)
+	if err != nil {
+		return nil, err
+	}
+
+	return usr, nil
+}
+
+// GetUserWithFields
+//
+// Gets the user with specified fields
+//   - `lv` : If true gets lengthvotes
+//   - `lvsum` : If true gets lengthvotes_sum
+func (c *VNDBClient) GetUserWithFields(username string, ctx context.Context, lv, lvsum bool) (*types.User, error) {
+	var url = fmt.Sprintf("user?q=%s&fields=", username)
+
+	switch lv {
+	case true:
+		if lvsum {
+			url += "lengthvotes,lengthvotes_sum"
+			break
+		}
+		url += "lengthvotes"
+	case false:
+		if lvsum {
+			url += "lengthvotes_sum"
+			break
+		}
+	}
+
+	usr, err := GrabUser(url, username, ctx, c)
+	if err != nil {
+		return nil, err
+	}
+
+	return usr, nil
+}
+
+func (c *VNDBClient) GetUListLabels(ctx context.Context, userId *string) (*types.GetUList, error) {
+	var userToSearch string
+
+	// if nil, we pass the current user using the client
+	if userId == nil {
+		auth, err := c.GetAuthInfo(context.Background(), c.token)
+		if err != nil {
+			return nil, err
+		}
+
+		userToSearch = auth.Id
+	} else {
+		userToSearch = *userId
+	}
+
+	url := fmt.Sprintf("%s?user=%s", types.UlistUrl, userToSearch)
+
+	var ulist types.GetUList
+	err := c.Get(ctx, url, &ulist)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ulist, nil
+}
+
+func (c *VNDBClient) GetStats(ctx context.Context) (*types.Stats, error) {
+	var stats types.Stats
+	err := c.Get(ctx, "stats", &stats)
+	if err != nil {
+		return nil, err
+	}
+
+	return &stats, nil
+}
+
+func (c *VNDBClient) GetAuthInfo(ctx context.Context, token string) (*types.AuthInfo, error) {
+	url := fmt.Sprintf("%s/%s", c.BaseUrl, types.AuthUrl)
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Token %s", c.token))
+
+	var authInfo types.AuthInfo
+	err = c.SendRequestWithToken(req, &authInfo, token)
+	if err != nil {
+		return nil, err
+	}
+
+	return &authInfo, nil
+}
+
+// GrabUser
+//
+// Function to grab the user data
+func GrabUser(url, username string, ctx context.Context, c *VNDBClient) (*types.User, error) {
+	var usr types.UserResponse
+	usr.Results = make(map[string]*types.User)
+
+	err := c.Get(ctx, url, &usr.Results)
+	if err != nil {
+		return nil, err
+	}
+
+	user, ok := usr.Results[username]
+	if !ok {
+		return nil, fmt.Errorf("user %s not found", username)
+	}
+
+	return user, nil
 }

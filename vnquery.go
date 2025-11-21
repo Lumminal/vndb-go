@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"log"
 	"strings"
+	"vndb-go/helper"
+	"vndb-go/types"
 )
 
 // This file includes all query related functions and structs
@@ -46,7 +48,7 @@ var (
 //
 // Holds common setter functions
 type BaseQuery struct {
-	Query       *Query
+	Query       *types.Query
 	Client      *VNDBClient
 	AllowedSort AllowedSort
 }
@@ -75,13 +77,13 @@ func (cq *BaseQuery) NormalizedFilters(nf bool) {
 	cq.Query.NormalizedFilters = nf
 }
 
-func (cq *BaseQuery) Filters(filter Filter) {
+func (cq *BaseQuery) Filters(filter types.Filter) {
 	cq.Query.Filters = filter
 }
 
 func (cq *BaseQuery) Sort(sort ...string) {
 	for _, str := range sort {
-		if !Contains(cq.AllowedSort, str) {
+		if !helper.Contains(cq.AllowedSort, str) {
 			log.Printf("Warning: Sorting not allowed: %s", str)
 		}
 	}
@@ -98,21 +100,21 @@ type VNQuery struct {
 
 func NewVnQuery(client *VNDBClient) *VNQuery {
 	return &VNQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedVnSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedVnSort},
 	}
 }
 
-func (vnq *VNQuery) Get(ctx context.Context) ([]Vn, error) {
+func (vnq *VNQuery) Get(ctx context.Context) ([]types.Vn, error) {
 	resp, err := vnq.Client.Post(ctx, "vn", vnq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Vn{}, nil
+		return []types.Vn{}, nil
 	}
 
-	var vns []Vn
+	var vns []types.Vn
 	err = json.Unmarshal(resp.Results, &vns)
 	if err != nil {
 		return nil, err
@@ -130,21 +132,21 @@ type CharQuery struct {
 
 func NewCharacterQuery(client *VNDBClient) *CharQuery {
 	return &CharQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedCharacterSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedCharacterSort},
 	}
 }
 
-func (cq *CharQuery) Get(ctx context.Context) ([]Character, error) {
+func (cq *CharQuery) Get(ctx context.Context) ([]types.Character, error) {
 	resp, err := cq.Client.Post(ctx, "character", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Character{}, nil
+		return []types.Character{}, nil
 	}
 
-	var chars []Character
+	var chars []types.Character
 	err = json.Unmarshal(resp.Results, &chars)
 	if err != nil {
 		return nil, err
@@ -162,21 +164,21 @@ type ProducerQuery struct {
 
 func NewProducerQuery(client *VNDBClient) *ProducerQuery {
 	return &ProducerQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedProducerSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedProducerSort},
 	}
 }
 
-func (cq *ProducerQuery) Get(ctx context.Context) ([]Producer, error) {
+func (cq *ProducerQuery) Get(ctx context.Context) ([]types.Producer, error) {
 	resp, err := cq.Client.Post(ctx, "producer", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Producer{}, nil
+		return []types.Producer{}, nil
 	}
 
-	var prods []Producer
+	var prods []types.Producer
 	err = json.Unmarshal(resp.Results, &prods)
 	if err != nil {
 		return nil, err
@@ -194,21 +196,21 @@ type ReleaseQuery struct {
 
 func NewReleaseQuery(client *VNDBClient) *ReleaseQuery {
 	return &ReleaseQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedReleaseSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedReleaseSort},
 	}
 }
 
-func (cq *ReleaseQuery) Get(ctx context.Context) ([]Release, error) {
+func (cq *ReleaseQuery) Get(ctx context.Context) ([]types.Release, error) {
 	resp, err := cq.Client.Post(ctx, "release", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Release{}, nil
+		return []types.Release{}, nil
 	}
 
-	var releases []Release
+	var releases []types.Release
 	err = json.Unmarshal(resp.Results, &releases)
 	if err != nil {
 		return nil, err
@@ -226,21 +228,21 @@ type StaffQuery struct {
 
 func NewStaffQuery(client *VNDBClient) *StaffQuery {
 	return &StaffQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedStaffSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedStaffSort},
 	}
 }
 
-func (cq *StaffQuery) Get(ctx context.Context) ([]Staff, error) {
+func (cq *StaffQuery) Get(ctx context.Context) ([]types.Staff, error) {
 	resp, err := cq.Client.Post(ctx, "staff", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Staff{}, nil
+		return []types.Staff{}, nil
 	}
 
-	var staff []Staff
+	var staff []types.Staff
 	err = json.Unmarshal(resp.Results, &staff)
 	if err != nil {
 		return nil, err
@@ -258,21 +260,21 @@ type TagQuery struct {
 
 func NewTagQuery(client *VNDBClient) *TagQuery {
 	return &TagQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedTagSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedTagSort},
 	}
 }
 
-func (cq *TagQuery) Get(ctx context.Context) ([]Tag, error) {
+func (cq *TagQuery) Get(ctx context.Context) ([]types.Tag, error) {
 	resp, err := cq.Client.Post(ctx, "tag", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Tag{}, nil
+		return []types.Tag{}, nil
 	}
 
-	var tags []Tag
+	var tags []types.Tag
 	err = json.Unmarshal(resp.Results, &tags)
 	if err != nil {
 		return nil, err
@@ -289,21 +291,21 @@ type TraitQuery struct {
 
 func NewTraitQuery(client *VNDBClient) *TraitQuery {
 	return &TraitQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedTraitSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedTraitSort},
 	}
 }
 
-func (cq *TraitQuery) Get(ctx context.Context) ([]Trait, error) {
+func (cq *TraitQuery) Get(ctx context.Context) ([]types.Trait, error) {
 	resp, err := cq.Client.Post(ctx, "trait", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Trait{}, nil
+		return []types.Trait{}, nil
 	}
 
-	var traits []Trait
+	var traits []types.Trait
 	err = json.Unmarshal(resp.Results, &traits)
 	if err != nil {
 		return nil, err
@@ -318,21 +320,21 @@ type QuoteQuery struct {
 
 func NewQuoteQuery(client *VNDBClient) *QuoteQuery {
 	return &QuoteQuery{
-		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedQuoteSort},
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedQuoteSort},
 	}
 }
 
-func (cq *QuoteQuery) Get(ctx context.Context) ([]Quote, error) {
+func (cq *QuoteQuery) Get(ctx context.Context) ([]types.Quote, error) {
 	resp, err := cq.Client.Post(ctx, "quote", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []Quote{}, nil
+		return []types.Quote{}, nil
 	}
 
-	var quotes []Quote
+	var quotes []types.Quote
 	err = json.Unmarshal(resp.Results, &quotes)
 	if err != nil {
 		return nil, err
@@ -341,14 +343,46 @@ func (cq *QuoteQuery) Get(ctx context.Context) ([]Quote, error) {
 	return quotes, nil
 }
 
-// Contains
-//
-// Helper to check if a string is contained in a slice/array
-func Contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
+type UListQueryRequest struct {
+	BaseQuery
+}
+
+type UListQuery struct {
+	BaseQuery
+	User string `json:"user,omitempty"`
+}
+
+func (ul *UListQuery) SetUser(id string) {
+	ul.User = id
+}
+
+func (ul *UListQuery) Get(ctx context.Context) ([]types.UList, error) {
+
+	ulistquery := &types.UlistQueryRequest{
+		Query: *ul.Query,
+		User:  ul.User,
 	}
-	return false
+
+	resp, err := ul.Client.PostUlist(ctx, "ulist", ulistquery)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Results == nil || len(resp.Results) == 0 {
+		return []types.UList{}, nil
+	}
+
+	var ulists []types.UList
+	err = json.Unmarshal(resp.Results, &ulists)
+	if err != nil {
+		return nil, err
+	}
+
+	return ulists, nil
+}
+
+func NewUlistQuery(client *VNDBClient) *UListQuery {
+	return &UListQuery{
+		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedUlistSort},
+	}
 }

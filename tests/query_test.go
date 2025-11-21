@@ -4,7 +4,8 @@ import (
 	"context"
 	"log"
 	"testing"
-	"vndb-go/vndb-go"
+	"vndb-go"
+	"vndb-go/types"
 )
 
 func TestVnQuery(t *testing.T) {
@@ -15,13 +16,13 @@ func TestVnQuery(t *testing.T) {
 
 	client := clientTest
 
-	var vns []vndb_go.Vn
+	var vns []types.Vn
 	vnQuery := vndb_go.NewVnQuery(client)
 	vnQuery.Fields("id")
 	vnQuery.Results(10)
 
 	vnQuery.Filters(
-		vndb_go.DevStatus.Equal("0"))
+		types.DevStatus.Equal("0"))
 
 	vns, err := vnQuery.Get(context.TODO())
 	if err != nil {
@@ -49,7 +50,7 @@ func TestCharQuery(t *testing.T) {
 
 	log.Printf("Filters: %s", charQuery.BaseQuery.Query.Filters)
 
-	var chars []vndb_go.Character
+	var chars []types.Character
 	chars, err := charQuery.Get(context.TODO())
 	if err != nil {
 		t.Errorf("%s", err)
