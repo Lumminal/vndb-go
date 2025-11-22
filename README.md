@@ -13,7 +13,7 @@ Some features like UList PATCH/DELETE have not been implemented.
 # Installation
 
 Run
-```go get github.com/Lumminal/vndb-go@v0.1.0```
+```go get github.com/Lumminal/vndb-go```
 
 # Examples
 
