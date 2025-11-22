@@ -258,7 +258,7 @@ func (c *VNDBClient) GetStats(ctx context.Context) (*Stats, error) {
 func (c *VNDBClient) GetAuthInfo(ctx context.Context, token string) (*AuthInfo, error) {
 	url := fmt.Sprintf("%s/%s", c.BaseUrl, AuthUrl)
 
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
