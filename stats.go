@@ -1,4 +1,4 @@
-package types
+package vndb_go
 
 type Stats struct {
 	Chars     int `json:"chars"`

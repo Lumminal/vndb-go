@@ -1,4 +1,4 @@
-package helper
+package vndb_go
 
 // Contains
 //

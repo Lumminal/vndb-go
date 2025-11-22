@@ -5,9 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"strings"
-
-	"github.com/Lumminal/vndb-go/helper"
-	"github.com/Lumminal/vndb-go/types"
 )
 
 // This file includes all query related functions and structs
@@ -49,7 +46,7 @@ var (
 //
 // Holds common setter functions
 type BaseQuery struct {
-	Query       *types.Query
+	Query       *Query
 	Client      *VNDBClient
 	AllowedSort AllowedSort
 }
@@ -78,13 +75,13 @@ func (cq *BaseQuery) NormalizedFilters(nf bool) {
 	cq.Query.NormalizedFilters = nf
 }
 
-func (cq *BaseQuery) Filters(filter types.Filter) {
+func (cq *BaseQuery) Filters(filter Filter) {
 	cq.Query.Filters = filter
 }
 
 func (cq *BaseQuery) Sort(sort ...string) {
 	for _, str := range sort {
-		if !helper.Contains(cq.AllowedSort, str) {
+		if !Contains(cq.AllowedSort, str) {
 			log.Printf("Warning: Sorting not allowed: %s", str)
 		}
 	}
@@ -101,21 +98,21 @@ type VNQuery struct {
 
 func NewVnQuery(client *VNDBClient) *VNQuery {
 	return &VNQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedVnSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedVnSort},
 	}
 }
 
-func (vnq *VNQuery) Get(ctx context.Context) ([]types.Vn, error) {
+func (vnq *VNQuery) Get(ctx context.Context) ([]Vn, error) {
 	resp, err := vnq.Client.Post(ctx, "vn", vnq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Vn{}, nil
+		return []Vn{}, nil
 	}
 
-	var vns []types.Vn
+	var vns []Vn
 	err = json.Unmarshal(resp.Results, &vns)
 	if err != nil {
 		return nil, err
@@ -133,21 +130,21 @@ type CharQuery struct {
 
 func NewCharacterQuery(client *VNDBClient) *CharQuery {
 	return &CharQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedCharacterSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedCharacterSort},
 	}
 }
 
-func (cq *CharQuery) Get(ctx context.Context) ([]types.Character, error) {
+func (cq *CharQuery) Get(ctx context.Context) ([]Character, error) {
 	resp, err := cq.Client.Post(ctx, "character", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Character{}, nil
+		return []Character{}, nil
 	}
 
-	var chars []types.Character
+	var chars []Character
 	err = json.Unmarshal(resp.Results, &chars)
 	if err != nil {
 		return nil, err
@@ -165,21 +162,21 @@ type ProducerQuery struct {
 
 func NewProducerQuery(client *VNDBClient) *ProducerQuery {
 	return &ProducerQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedProducerSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedProducerSort},
 	}
 }
 
-func (cq *ProducerQuery) Get(ctx context.Context) ([]types.Producer, error) {
+func (cq *ProducerQuery) Get(ctx context.Context) ([]Producer, error) {
 	resp, err := cq.Client.Post(ctx, "producer", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Producer{}, nil
+		return []Producer{}, nil
 	}
 
-	var prods []types.Producer
+	var prods []Producer
 	err = json.Unmarshal(resp.Results, &prods)
 	if err != nil {
 		return nil, err
@@ -197,21 +194,21 @@ type ReleaseQuery struct {
 
 func NewReleaseQuery(client *VNDBClient) *ReleaseQuery {
 	return &ReleaseQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedReleaseSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedReleaseSort},
 	}
 }
 
-func (cq *ReleaseQuery) Get(ctx context.Context) ([]types.Release, error) {
+func (cq *ReleaseQuery) Get(ctx context.Context) ([]Release, error) {
 	resp, err := cq.Client.Post(ctx, "release", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Release{}, nil
+		return []Release{}, nil
 	}
 
-	var releases []types.Release
+	var releases []Release
 	err = json.Unmarshal(resp.Results, &releases)
 	if err != nil {
 		return nil, err
@@ -229,21 +226,21 @@ type StaffQuery struct {
 
 func NewStaffQuery(client *VNDBClient) *StaffQuery {
 	return &StaffQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedStaffSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedStaffSort},
 	}
 }
 
-func (cq *StaffQuery) Get(ctx context.Context) ([]types.Staff, error) {
+func (cq *StaffQuery) Get(ctx context.Context) ([]Staff, error) {
 	resp, err := cq.Client.Post(ctx, "staff", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Staff{}, nil
+		return []Staff{}, nil
 	}
 
-	var staff []types.Staff
+	var staff []Staff
 	err = json.Unmarshal(resp.Results, &staff)
 	if err != nil {
 		return nil, err
@@ -261,21 +258,21 @@ type TagQuery struct {
 
 func NewTagQuery(client *VNDBClient) *TagQuery {
 	return &TagQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedTagSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedTagSort},
 	}
 }
 
-func (cq *TagQuery) Get(ctx context.Context) ([]types.Tag, error) {
+func (cq *TagQuery) Get(ctx context.Context) ([]Tag, error) {
 	resp, err := cq.Client.Post(ctx, "tag", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Tag{}, nil
+		return []Tag{}, nil
 	}
 
-	var tags []types.Tag
+	var tags []Tag
 	err = json.Unmarshal(resp.Results, &tags)
 	if err != nil {
 		return nil, err
@@ -292,21 +289,21 @@ type TraitQuery struct {
 
 func NewTraitQuery(client *VNDBClient) *TraitQuery {
 	return &TraitQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedTraitSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedTraitSort},
 	}
 }
 
-func (cq *TraitQuery) Get(ctx context.Context) ([]types.Trait, error) {
+func (cq *TraitQuery) Get(ctx context.Context) ([]Trait, error) {
 	resp, err := cq.Client.Post(ctx, "trait", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Trait{}, nil
+		return []Trait{}, nil
 	}
 
-	var traits []types.Trait
+	var traits []Trait
 	err = json.Unmarshal(resp.Results, &traits)
 	if err != nil {
 		return nil, err
@@ -321,21 +318,21 @@ type QuoteQuery struct {
 
 func NewQuoteQuery(client *VNDBClient) *QuoteQuery {
 	return &QuoteQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedQuoteSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedQuoteSort},
 	}
 }
 
-func (cq *QuoteQuery) Get(ctx context.Context) ([]types.Quote, error) {
+func (cq *QuoteQuery) Get(ctx context.Context) ([]Quote, error) {
 	resp, err := cq.Client.Post(ctx, "quote", cq.Query)
 	if err != nil {
 		return nil, err
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.Quote{}, nil
+		return []Quote{}, nil
 	}
 
-	var quotes []types.Quote
+	var quotes []Quote
 	err = json.Unmarshal(resp.Results, &quotes)
 	if err != nil {
 		return nil, err
@@ -357,9 +354,9 @@ func (ul *UListQuery) SetUser(id string) {
 	ul.User = id
 }
 
-func (ul *UListQuery) Get(ctx context.Context) ([]types.UList, error) {
+func (ul *UListQuery) Get(ctx context.Context) ([]UList, error) {
 
-	ulistquery := &types.UlistQueryRequest{
+	ulistquery := &UlistQueryRequest{
 		Query: *ul.Query,
 		User:  ul.User,
 	}
@@ -370,10 +367,10 @@ func (ul *UListQuery) Get(ctx context.Context) ([]types.UList, error) {
 	}
 
 	if resp.Results == nil || len(resp.Results) == 0 {
-		return []types.UList{}, nil
+		return []UList{}, nil
 	}
 
-	var ulists []types.UList
+	var ulists []UList
 	err = json.Unmarshal(resp.Results, &ulists)
 	if err != nil {
 		return nil, err
@@ -384,6 +381,6 @@ func (ul *UListQuery) Get(ctx context.Context) ([]types.UList, error) {
 
 func NewUlistQuery(client *VNDBClient) *UListQuery {
 	return &UListQuery{
-		BaseQuery: BaseQuery{Query: &types.Query{}, Client: client, AllowedSort: allowedUlistSort},
+		BaseQuery: BaseQuery{Query: &Query{}, Client: client, AllowedSort: allowedUlistSort},
 	}
 }

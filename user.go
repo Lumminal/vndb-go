@@ -1,4 +1,4 @@
-package types
+package vndb_go
 
 type BaseUser struct {
 	Id       string `json:"id"`

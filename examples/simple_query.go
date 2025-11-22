@@ -6,13 +6,12 @@ import (
 	"os"
 
 	"github.com/Lumminal/vndb-go"
-	"github.com/Lumminal/vndb-go/types"
 )
 
 func main() {
 	client := vndb_go.NewVndbClient(os.Getenv(vndb_go.VNDBToken))
 
-	var vns []types.Vn                    // we will store the results here
+	var vns []vndb_go.Vn                  // we will store the results here
 	vnQuery := vndb_go.NewVnQuery(client) // create a new query
 	vnQuery.Fields("title", "devstatus")  // grab only vns with "title" and "devstatus"
 	vnQuery.Results(10)                   // return only 10 VNs

@@ -8,8 +8,6 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
-	"github.com/Lumminal/vndb-go/types"
 )
 
 const (
@@ -125,7 +123,7 @@ func (c *VNDBClient) Get(ctx context.Context, endpoint string, out interface{}) 
 	return nil
 }
 
-func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *types.Query) (*types.VNResponse, error) {
+func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *Query) (*VNResponse, error) {
 	body, err := json.Marshal(q)
 	if err != nil {
 		return nil, err
@@ -136,7 +134,7 @@ func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *types.Query) 
 		return nil, err
 	}
 
-	var result types.VNResponse
+	var result VNResponse
 	err = c.SendRequest(req, &result)
 	if err != nil {
 		return nil, err
@@ -146,7 +144,7 @@ func (c *VNDBClient) Post(ctx context.Context, endpoint string, q *types.Query) 
 }
 
 // Use this instead of Post when working with ulists
-func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *types.UlistQueryRequest) (*types.VNResponse, error) {
+func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *UlistQueryRequest) (*VNResponse, error) {
 	body, err := json.Marshal(q)
 	if err != nil {
 		return nil, err
@@ -157,7 +155,7 @@ func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *types.Ul
 		return nil, err
 	}
 
-	var result types.VNResponse
+	var result VNResponse
 	err = c.SendRequest(req, &result)
 	if err != nil {
 		return nil, err
@@ -169,7 +167,7 @@ func (c *VNDBClient) PostUlist(ctx context.Context, endpoint string, q *types.Ul
 // GetUser
 //
 // Gets the user without any fields specified
-func (c *VNDBClient) GetUser(username string, ctx context.Context) (*types.User, error) {
+func (c *VNDBClient) GetUser(username string, ctx context.Context) (*User, error) {
 	var url = fmt.Sprintf("user?q=%s", username)
 
 	usr, err := GrabUser(url, username, ctx, c)
@@ -185,7 +183,7 @@ func (c *VNDBClient) GetUser(username string, ctx context.Context) (*types.User,
 // Gets the user with specified fields
 //   - `lv` : If true gets lengthvotes
 //   - `lvsum` : If true gets lengthvotes_sum
-func (c *VNDBClient) GetUserWithFields(username string, ctx context.Context, lv, lvsum bool) (*types.User, error) {
+func (c *VNDBClient) GetUserWithFields(username string, ctx context.Context, lv, lvsum bool) (*User, error) {
 	var url = fmt.Sprintf("user?q=%s&fields=", username)
 
 	switch lv {
@@ -210,7 +208,7 @@ func (c *VNDBClient) GetUserWithFields(username string, ctx context.Context, lv,
 	return usr, nil
 }
 
-func (c *VNDBClient) GetUListLabels(ctx context.Context, userId *string) (*types.GetUList, error) {
+func (c *VNDBClient) GetUListLabels(ctx context.Context, userId *string) (*GetUList, error) {
 	var userToSearch string
 
 	// if nil, we pass the current user using the client
@@ -225,9 +223,9 @@ func (c *VNDBClient) GetUListLabels(ctx context.Context, userId *string) (*types
 		userToSearch = *userId
 	}
 
-	url := fmt.Sprintf("%s?user=%s", types.UlistUrl, userToSearch)
+	url := fmt.Sprintf("%s?user=%s", UlistUrl, userToSearch)
 
-	var ulist types.GetUList
+	var ulist GetUList
 	err := c.Get(ctx, url, &ulist)
 	if err != nil {
 		return nil, err
@@ -236,8 +234,8 @@ func (c *VNDBClient) GetUListLabels(ctx context.Context, userId *string) (*types
 	return &ulist, nil
 }
 
-func (c *VNDBClient) GetStats(ctx context.Context) (*types.Stats, error) {
-	var stats types.Stats
+func (c *VNDBClient) GetStats(ctx context.Context) (*Stats, error) {
+	var stats Stats
 	err := c.Get(ctx, "stats", &stats)
 	if err != nil {
 		return nil, err
@@ -246,8 +244,8 @@ func (c *VNDBClient) GetStats(ctx context.Context) (*types.Stats, error) {
 	return &stats, nil
 }
 
-func (c *VNDBClient) GetAuthInfo(ctx context.Context, token string) (*types.AuthInfo, error) {
-	url := fmt.Sprintf("%s/%s", c.BaseUrl, types.AuthUrl)
+func (c *VNDBClient) GetAuthInfo(ctx context.Context, token string) (*AuthInfo, error) {
+	url := fmt.Sprintf("%s/%s", c.BaseUrl, AuthUrl)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -255,7 +253,7 @@ func (c *VNDBClient) GetAuthInfo(ctx context.Context, token string) (*types.Auth
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Token %s", c.token))
 
-	var authInfo types.AuthInfo
+	var authInfo AuthInfo
 	err = c.SendRequestWithToken(req, &authInfo, token)
 	if err != nil {
 		return nil, err
@@ -267,9 +265,9 @@ func (c *VNDBClient) GetAuthInfo(ctx context.Context, token string) (*types.Auth
 // GrabUser
 //
 // Function to grab the user data
-func GrabUser(url, username string, ctx context.Context, c *VNDBClient) (*types.User, error) {
-	var usr types.UserResponse
-	usr.Results = make(map[string]*types.User)
+func GrabUser(url, username string, ctx context.Context, c *VNDBClient) (*User, error) {
+	var usr UserResponse
+	usr.Results = make(map[string]*User)
 
 	err := c.Get(ctx, url, &usr.Results)
 	if err != nil {

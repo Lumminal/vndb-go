@@ -6,14 +6,13 @@ import (
 	"testing"
 
 	"github.com/Lumminal/vndb-go"
-	"github.com/Lumminal/vndb-go/types"
 )
 
 func TestAuth(t *testing.T) {
 	client := vndb_go.NewVndbClient("")
 
-	expected := &types.AuthInfo{
-		BaseUser: types.BaseUser{
+	expected := &vndb_go.AuthInfo{
+		BaseUser: vndb_go.BaseUser{
 			Id:       "u227260",
 			Username: "Luminal",
 		},
@@ -26,7 +25,7 @@ func TestAuth(t *testing.T) {
 		t.Errorf("Error getting auth info: %s", err)
 	}
 
-	if !types.CompareAuthInfo(expected, auth) {
+	if !vndb_go.CompareAuthInfo(expected, auth) {
 		t.Errorf("Got %v, but expected %v", auth, expected)
 	}
 }

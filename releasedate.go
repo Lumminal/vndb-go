@@ -1,4 +1,4 @@
-package types
+package vndb_go
 
 import (
 	"encoding/json"

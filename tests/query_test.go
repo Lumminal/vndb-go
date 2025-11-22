@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/Lumminal/vndb-go"
-	"github.com/Lumminal/vndb-go/types"
 )
 
 func TestVnQuery(t *testing.T) {
@@ -17,13 +16,13 @@ func TestVnQuery(t *testing.T) {
 
 	client := clientTest
 
-	var vns []types.Vn
+	var vns []vndb_go.Vn
 	vnQuery := vndb_go.NewVnQuery(client)
 	vnQuery.Fields("id")
 	vnQuery.Results(10)
 
 	vnQuery.Filters(
-		types.DevStatus.Equal("0"))
+		vndb_go.DevStatus.Equal("0"))
 
 	vns, err := vnQuery.Get(context.TODO())
 	if err != nil {
@@ -51,7 +50,7 @@ func TestCharQuery(t *testing.T) {
 
 	log.Printf("Filters: %s", charQuery.BaseQuery.Query.Filters)
 
-	var chars []types.Character
+	var chars []vndb_go.Character
 	chars, err := charQuery.Get(context.TODO())
 	if err != nil {
 		t.Errorf("%s", err)
