@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"golang.org/x/time/rate"
 )
 
 const (
@@ -20,9 +22,10 @@ const (
 // Includes a client that makes use of VNDB's api via several functions
 // For more info, check: https://api.vndb.org/kana
 type VNDBClient struct {
-	BaseUrl    string
-	token      string
-	HttpClient *http.Client
+	BaseUrl     string
+	token       string
+	HttpClient  *http.Client
+	RateLimiter *rate.Limiter
 }
 
 // errorResponse
@@ -39,12 +42,15 @@ type errorResponse struct {
 // Returns a VNDBClient for use in operations
 // You can pass an empty token if you don't have one
 func NewVndbClient(token string) *VNDBClient {
+	limiter := rate.NewLimiter(rate.Limit(200.0/300.0), 200) // 200 requests per 5 minutes
+
 	return &VNDBClient{
 		BaseUrl: BaseUrl,
 		token:   token,
 		HttpClient: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 3 * time.Second,
 		},
+		RateLimiter: limiter,
 	}
 }
 
@@ -57,6 +63,11 @@ func (c *VNDBClient) SendRequest(req *http.Request, v interface{}) error {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Token %s", c.token))
 	req.Header.Set("Accept", "application/json")
+
+	err := c.RateLimiter.Wait(req.Context())
+	if err != nil {
+		return err
+	}
 
 	resp, err := c.HttpClient.Do(req)
 	if err != nil {
