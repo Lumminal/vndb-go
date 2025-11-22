@@ -1,7 +1,6 @@
 # Vndb-go
 
 vndb-go is an api wrapper for [VNDB API](https://api.vndb.org/kana).
-Zero dependencies are required to run this package.
 
 ### Status 
 
